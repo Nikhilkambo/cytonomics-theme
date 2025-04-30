@@ -705,6 +705,178 @@
                 content: none !important;
             }
         }
+
+        /* Mobile Menu Card Styles */
+        .mobile-menu-cards {
+            display: none;
+            padding: 0;
+            background: #FAFAFA;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 99999;
+            overflow-y: auto;
+        }
+
+        .mobile-menu-cards-header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .mobile-menu-cards-logo {
+            height: 45px;
+            width: auto;
+        }
+
+        .mobile-menu-cards-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            color: #000;
+            font-size: 24px;
+        }
+
+        .mobile-menu-cards-content {
+            padding: 20px;
+        }
+
+        .mobile-menu-cards-title {
+            color: #FF3366;
+            font-size: 22px;
+            font-weight: 500;
+            margin: 20px 0 0 0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            cursor: pointer;
+        }
+
+        .mobile-menu-cards-title .menu-arrow {
+            margin-left: 5px;
+        }
+
+        .mobile-menu-cards-title .menu-arrow i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            transform: rotate(1deg);
+        }
+
+        .mobile-menu-cards.active .mobile-menu-cards-title .menu-arrow i {
+            transform: rotate(180deg);
+        }
+
+        .mobile-menu-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu-card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        .mobile-menu-card-icon i {
+            font-size: 24px;
+            color: #FF3366;
+        }
+
+        .mobile-menu-card-content {
+            flex: 1;
+        }
+
+        .mobile-menu-card-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1A1A1A;
+            margin: 0 0 8px 0;
+        }
+
+        .mobile-menu-card-description {
+            font-size: 14px;
+            color: #666666;
+            margin: 0 0 12px 0;
+            line-height: 1.5;
+        }
+
+        .mobile-menu-card-link {
+            color: #FF3366;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-cards.active {
+                display: block;
+            }
+        }
+
+        /* Menu Arrow Styles */
+        .menu-arrow {
+            margin-left: 5px;
+            display: inline-block;
+        }
+
+        .menu-arrow i {
+            font-size: 14px;
+            color: inherit;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .primary-menu > li > a {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+
+            .menu-arrow {
+                margin-left: 10px;
+            }
+
+            .menu-arrow i {
+                font-size: 16px;
+            }
+
+            /* Focus Area specific styles */
+            a[data-mega-template-id="129"] {
+                color: #FF3366 !important;
+            }
+
+            a[data-mega-template-id="129"] .menu-arrow i {
+                color: #000000;
+            }
+        }
     </style>
 </head>
 
@@ -1128,11 +1300,9 @@ body {
 
 <script>
 jQuery(document).ready(function($) {
-    // Mobile menu toggle
-    $('.menu-toggle').click(function() {
-        $('.primary-menu-container').toggleClass('active');
-        $(this).toggleClass('active');
-    });
+    // Initialize menu state
+    var isMenuOpen = false;
+    var isFocusAreaActive = false;
 
     // Header scroll effect
     var lastScroll = 0;
@@ -1159,6 +1329,131 @@ jQuery(document).ready(function($) {
         }
 
         lastScroll = currentScroll;
+    });
+
+    // Add arrow to Focus Area menu item if it doesn't exist
+    var $focusAreaLink = $('a[data-mega-template-id="129"]');
+    if ($focusAreaLink.find('.menu-arrow').length === 0) {
+        $focusAreaLink.append('<span class="menu-arrow"><i class="fas fa-chevron-down"></i></span>');
+    }
+
+    // Add the cards HTML structure
+    var cardsHTML = `
+        <div class="mobile-menu-cards">
+            <div class="mobile-menu-cards-header">
+                <img src="${$('.custom-logo').attr('src')}" alt="Logo" class="mobile-menu-cards-logo">
+                <button class="mobile-menu-cards-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <h2 class="mobile-menu-cards-title">
+                Focus Area
+                <span class="menu-arrow">
+                    <i class="fas fa-chevron-up"></i>
+                </span>
+            </h2>
+            <div class="mobile-menu-cards-content">
+                <div class="mobile-menu-card">
+                    <div class="mobile-menu-card-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <div class="mobile-menu-card-content">
+                        <h3 class="mobile-menu-card-title">Reproductive Genetics</h3>
+                        <p class="mobile-menu-card-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        <a href="#" class="mobile-menu-card-link">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-card">
+                    <div class="mobile-menu-card-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="mobile-menu-card-content">
+                        <h3 class="mobile-menu-card-title">Neurogenetics</h3>
+                        <p class="mobile-menu-card-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        <a href="#" class="mobile-menu-card-link">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-card">
+                    <div class="mobile-menu-card-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <div class="mobile-menu-card-content">
+                        <h3 class="mobile-menu-card-title">Oncogenetics</h3>
+                        <p class="mobile-menu-card-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        <a href="#" class="mobile-menu-card-link">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-card">
+                    <div class="mobile-menu-card-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <div class="mobile-menu-card-content">
+                        <h3 class="mobile-menu-card-title">Rare Disorders</h3>
+                        <p class="mobile-menu-card-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        <a href="#" class="mobile-menu-card-link">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add the cards to the body
+    $('body').append(cardsHTML);
+
+    // Handle Focus Area menu click
+    $('a[data-mega-template-id="129"]').click(function(e) {
+        if ($(window).width() <= 768) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('.mobile-menu-cards').addClass('active');
+            $('body').addClass('menu-open');
+            
+            // Rotate arrow
+            $(this).find('.menu-arrow i').css('transform', 'rotate(180deg)');
+        }
+    });
+
+    // Handle close button click
+    $('.mobile-menu-cards-close').click(function() {
+        $('.mobile-menu-cards').removeClass('active');
+        $('body').removeClass('menu-open');
+        
+        // Reset arrow rotation
+        $('a[data-mega-template-id="129"]').find('.menu-arrow i').css('transform', 'rotate(0deg)');
+    });
+
+    // Handle hamburger menu click
+    $('.menu-toggle').click(function() {
+        if ($('.mobile-menu-cards').hasClass('active')) {
+            $('.mobile-menu-cards').removeClass('active');
+            // Reset arrow rotation
+            $('a[data-mega-template-id="129"]').find('.menu-arrow i').css('transform', 'rotate(0deg)');
+        }
+        $(this).toggleClass('active');
+        $('.primary-menu-container').toggleClass('active');
+        $('body').toggleClass('menu-open');
+    });
+
+    // Handle close button click
+    $('.primary-menu-close').click(function() {
+        $('.menu-toggle').removeClass('active');
+        $('.primary-menu-container').removeClass('active');
+        $('.mobile-menu-cards').removeClass('active');
+        $('body').removeClass('menu-open');
+        
+        // Reset arrow rotation
+        $('a[data-mega-template-id="129"]').find('.menu-arrow i').css('transform', 'rotate(0deg)');
+    });
+
+    // Add click handler for the title
+    $(document).on('click', '.mobile-menu-cards-title', function() {
+        $('.mobile-menu-cards').removeClass('active');
+        $('body').removeClass('menu-open');
+        // Reset menu arrow
+        $('a[data-mega-template-id="129"]').find('.menu-arrow i').css('transform', 'rotate(0deg)');
     });
 });
 </script>
